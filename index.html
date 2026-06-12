@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QA Shop — Product Listing</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="index.html" data-nav>QA<span>Shop</span></a>
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html" class="is-active" data-nav>Products</a>
+          <a href="cart.html" data-nav>Cart</a>
+          <a href="checkout.html" data-nav>Checkout</a>
+        </nav>
+        <a class="cart-pill" href="cart.html" data-nav aria-label="View cart">
+          Cart <span class="cart-pill__count" id="header-cart-count">0</span>
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>Catalog</h1>
+        <p>
+          Dummy storefront for manual QA, automation practice, test design, and demos. Cart data is stored in
+          <strong>localStorage</strong>. Append <code>?debug=true</code> to any URL for the hidden QA panel.
+        </p>
+      </section>
+
+      <div class="filters" id="category-filters" role="tablist" aria-label="Filter by category"></div>
+      <div class="grid" id="product-grid" aria-live="polite"></div>
+    </main>
+
+    <footer class="site-footer">
+      QA E-Commerce Demo — no authentication, placeholder payments, fictional catalog.
+    </footer>
+
+    <div id="qa-debug-root"></div>
+
+    <script src="js/catalog.js"></script>
+    <script src="js/cart-store.js"></script>
+    <script src="js/promotions.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/plp.js"></script>
+  </body>
+</html>

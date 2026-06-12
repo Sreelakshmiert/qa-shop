@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QA Shop — Order confirmation</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="index.html" data-nav>QA<span>Shop</span></a>
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html" data-nav>Products</a>
+          <a href="cart.html" data-nav>Cart</a>
+          <a href="checkout.html" data-nav>Checkout</a>
+        </nav>
+        <a class="cart-pill" href="cart.html" data-nav aria-label="View cart">
+          Cart <span class="cart-pill__count" id="header-cart-count">0</span>
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>Order confirmed</h1>
+        <p id="confirm-lead">Thank you. Your test order has been recorded locally.</p>
+      </section>
+
+      <div id="confirm-missing" class="panel empty-state" hidden>
+        <p>No order found. If you refreshed this page, open checkout again to place a new order.</p>
+        <p><a href="index.html" data-nav>Back to shop</a></p>
+      </div>
+
+      <div id="confirm-body" hidden>
+        <div class="panel alert alert--success" style="margin-bottom: 18px">
+          <strong>Success.</strong> Order <span id="order-id"></span> was placed at <span id="order-time"></span>.
+        </div>
+        <div class="summary-grid">
+          <div class="panel">
+            <h2>Billing</h2>
+            <pre id="bill-block" style="margin: 0; white-space: pre-wrap; font-family: inherit; font-size: 0.92rem"></pre>
+            <h2 style="margin-top: 18px">Shipping</h2>
+            <pre id="ship-block" style="margin: 0; white-space: pre-wrap; font-family: inherit; font-size: 0.92rem"></pre>
+          </div>
+          <div class="panel">
+            <h2>Order summary</h2>
+            <div id="confirm-lines" class="stack" style="font-size: 0.92rem"></div>
+            <div class="stack" id="confirm-summary" style="margin-top: 12px"></div>
+            <div style="margin-top: 14px">
+              <h3 style="margin: 0 0 8px; font-size: 0.95rem">Applied promotions</h3>
+              <div id="confirm-promos" class="applied-promos"></div>
+            </div>
+            <a class="btn btn--primary" href="index.html" data-nav style="display: inline-block; margin-top: 16px; text-decoration: none">Continue shopping</a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">QA E-Commerce Demo — confirmation reads last order from sessionStorage.</footer>
+
+    <div id="qa-debug-root"></div>
+
+    <script src="js/catalog.js"></script>
+    <script src="js/cart-store.js"></script>
+    <script src="js/promotions.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/confirmation.js"></script>
+  </body>
+</html>

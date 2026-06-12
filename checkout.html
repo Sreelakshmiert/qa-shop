@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QA Shop — Checkout</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand" href="index.html" data-nav>QA<span>Shop</span></a>
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html" data-nav>Products</a>
+          <a href="cart.html" data-nav>Cart</a>
+          <a href="checkout.html" class="is-active" data-nav>Checkout</a>
+        </nav>
+        <a class="cart-pill" href="cart.html" data-nav aria-label="View cart">
+          Cart <span class="cart-pill__count" id="header-cart-count">0</span>
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>Checkout</h1>
+        <p>Dummy billing and shipping forms. No payment processor — placing an order stores a snapshot and clears the cart.</p>
+      </section>
+
+      <div id="checkout-empty" class="panel empty-state" hidden>
+        <p>Your cart is empty. Add products before checkout.</p>
+        <p><a href="index.html" data-nav>Continue shopping</a></p>
+      </div>
+
+      <div id="checkout-form-wrap" class="summary-grid" hidden>
+        <div class="stack">
+          <form class="panel checkout-form" id="billing-form" novalidate>
+            <h2>Billing information</h2>
+            <div class="form-grid">
+              <div>
+                <label for="bill-first">First name</label>
+                <input id="bill-first" name="billFirst" required autocomplete="given-name" />
+              </div>
+              <div>
+                <label for="bill-last">Last name</label>
+                <input id="bill-last" name="billLast" required autocomplete="family-name" />
+              </div>
+            </div>
+            <label for="bill-email">Email</label>
+            <input id="bill-email" name="billEmail" type="email" required autocomplete="email" />
+            <label for="bill-address">Address</label>
+            <input id="bill-address" name="billAddress" required autocomplete="street-address" />
+            <div class="form-grid">
+              <div>
+                <label for="bill-city">City</label>
+                <input id="bill-city" name="billCity" required autocomplete="address-level2" />
+              </div>
+              <div>
+                <label for="bill-zip">Postal code</label>
+                <input id="bill-zip" name="billZip" required autocomplete="postal-code" />
+              </div>
+            </div>
+            <label for="bill-country">Country</label>
+            <select id="bill-country" name="billCountry" autocomplete="country-name">
+              <option>United States</option>
+              <option>Canada</option>
+              <option>United Kingdom</option>
+            </select>
+          </form>
+
+          <form class="panel checkout-form" id="shipping-form" novalidate>
+            <h2>Shipping information</h2>
+            <label style="display: flex; gap: 8px; align-items: center; font-weight: 600">
+              <input type="checkbox" id="ship-same" checked />
+              Same as billing
+            </label>
+            <div id="shipping-fields" style="margin-top: 8px; display: none">
+              <div class="form-grid">
+                <div>
+                  <label for="ship-first">First name</label>
+                  <input id="ship-first" autocomplete="shipping given-name" />
+                </div>
+                <div>
+                  <label for="ship-last">Last name</label>
+                  <input id="ship-last" autocomplete="shipping family-name" />
+                </div>
+              </div>
+              <label for="ship-address">Address</label>
+              <input id="ship-address" autocomplete="shipping street-address" />
+              <div class="form-grid">
+                <div>
+                  <label for="ship-city">City</label>
+                  <input id="ship-city" autocomplete="shipping address-level2" />
+                </div>
+                <div>
+                  <label for="ship-zip">Postal code</label>
+                  <input id="ship-zip" autocomplete="shipping postal-code" />
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="stack">
+          <div class="panel">
+            <h2>Order summary</h2>
+            <div id="checkout-lines" class="stack" style="font-size: 0.92rem"></div>
+            <div class="stack" id="checkout-summary" style="margin-top: 12px"></div>
+            <div style="margin-top: 14px">
+              <h3 style="margin: 0 0 8px; font-size: 0.95rem">Applied promotions</h3>
+              <div id="checkout-promos" class="applied-promos">None</div>
+            </div>
+            <button type="button" class="btn btn--primary" id="btn-place-order" style="width: 100%; margin-top: 16px">Place order</button>
+            <p id="checkout-error" class="alert alert--error" style="display: none; margin-top: 12px" role="alert"></p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">QA E-Commerce Demo — orders are simulated only.</footer>
+
+    <div id="qa-debug-root"></div>
+
+    <script src="js/catalog.js"></script>
+    <script src="js/cart-store.js"></script>
+    <script src="js/promotions.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/checkout.js"></script>
+  </body>
+</html>
