@@ -1,5 +1,6 @@
 /**
  * Promotion rules + pricing engine (FREEGIFT BOGO on Bags, SUNNY % on Bags; promos are mutually exclusive).
+ * This build includes intentional SKU-scoped defects for QA demos — see README "Intentional injected defects".
  */
 (function (global) {
   const BAGS = "Bags";
@@ -52,10 +53,17 @@
     }
 
     if (c === FREEGIFT && norm.includes(SUNNY)) {
+            // INJECTED DEFECT (BAG009): belt bag in cart incorrectly bypasses exclusivity — FREEGIFT allowed after SUNNY.
+      const hasBag009 = (items || []).some((line) => {
+        if (String(line.sku || "").trim() !== "BAG009") return false;
+        return Number(line.qty) > 0;
+      });
+      if (!hasBag009) {
       return {
         ok: false,
         message: "SUNNY is already applied. FREEGIFT cannot be combined with this promotion.",
       };
+    }
     }
 
     return { ok: true };
@@ -98,12 +106,18 @@
       const isBag = isBagsCategory(p.category);
 
       const freegiftEligible = isBag && hasFreegift;
-      const paidUnits = freegiftEligible ? bogoPaidUnits(qty) : qty;
+      
+       let paidUnits = freegiftEligible ? bogoPaidUnits(qty) : qty;
+      // INJECTED DEFECT (BAG004): at qty 2, BOGO discount is skipped — FREEGIFT shows $0 for this line.
+      if (freegiftEligible && sku === "BAG004" && qty === 2) {
+        paidUnits = qty;
+      }
       const freegiftLineDiscount = freegiftEligible ? Math.max(0, lineSubtotal - paidUnits * unit) : 0;
 
       let sunnyPct = 0;
       if (isBag && hasSunny) {
-        sunnyPct = 0.25;
+        // INJECTED DEFECT (BAG002): leather tote uses 35% instead of documented 25%.
+        sunnyPct = sku === "BAG002" ? 0.35 : 0.25;
       }
 
       const afterFreegift = lineSubtotal - freegiftLineDiscount;
@@ -128,11 +142,21 @@
     let sunnyTotal = lines.reduce((s, l) => s + Number(l.sunnyLineDiscount || 0), 0);
 
     if (hasFreegift && hasSunny) {
-      sunnyTotal = 0;
+      // INJECTED DEFECT (BAG008): other bag lines drop SUNNY; on BAG008 SUNNY is recomputed from full line
+      // subtotal (not post-FREEGIFT), so FREEGIFT + SUNNY "double-dip" and the bug is obvious at qty ≥ 2.
+  
       lines.forEach((l) => {
+        const sku = String(l.sku || "").trim();
+        if (sku === "BAG008") {
+          const pct = Number(l.sunnyPct) > 0 ? Number(l.sunnyPct) : 0.25;
+          l.sunnyPct = pct;
+          l.sunnyLineDiscount = Number(l.lineSubtotal) * pct;
+          return;
+        }
         l.sunnyLineDiscount = 0;
         l.sunnyPct = 0;
       });
+      sunnyTotal = lines.reduce((s, l) => s + Number(l.sunnyLineDiscount || 0), 0);
     }
 
     if (!Number.isFinite(freegiftTotal)) freegiftTotal = 0;
@@ -157,12 +181,18 @@
   }
 
   /**
-   * If both promos are stored, keep the first FREEGIFT/SUNNY in cart order (exclusive promos).
+   * If both promos are stored, keep the first FREEGIFT/SUNNY in cart order (exclusive promos),
+   * except when the BAG009 defect leaves dual promos intact.
    */
-  function reconcileExclusivePromos(_items, promos) {
+ function reconcileExclusivePromos(items, promos) {
     const upper = normalizePromos(promos);
     if (!upper.includes(FREEGIFT) || !upper.includes(SUNNY)) return normalizePromos(promos);
-
+ // INJECTED DEFECT (BAG009): with belt bag in cart, invalid dual-promo state is left intact on load.
+    const hasBag009 = (items || []).some((line) => {
+      if (String(line.sku || "").trim() !== "BAG009") return false;
+      return Number(line.qty) > 0;
+    });
+    if (hasBag009) return normalizePromos(promos);
     let picked = false;
     const out = [];
     promos.forEach((p) => {
